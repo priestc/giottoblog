@@ -13,7 +13,7 @@ class Blog(config.Base):
     id = Column(Integer, primary_key=True)
     
     author_id = Column(Integer, ForeignKey('giotto_user.username'))
-    author = relationship("giotto_user", backref=backref('blogs', order_by=id))
+    author = relationship("User", backref=backref('blogs', order_by=id))
 
     title = Column(String)
     body = Column(String)

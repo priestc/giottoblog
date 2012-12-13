@@ -15,18 +15,18 @@ manifest = ProgramManifest({
     '': ProgramManifest({
         '': GiottoProgram(
             model=[Blog.all],
-            view=JinjaTemplateView('blog_index.html', name="blogs"),
+            view=JinjaTemplateView('html/blog_index.html', name="blogs"),
             controllers=('http-get', ),
         ),
         'blog': GiottoProgram(
             model=[Blog.get],
-            view=JinjaTemplateView('blog.html'),
+            view=JinjaTemplateView('html/blog.html'),
             controllers=('http-get', ),
         ),
         'new': [
             GiottoProgram(
                 input_middleware=[AuthenticationMiddleware, AuthenticatedOrDie],
-                view=JinjaTemplateView('new_blog.html'),
+                view=JinjaTemplateView('html/new_blog.html'),
                 controllers=('http-get', '*'),
             ),
             GiottoProgram(
@@ -40,7 +40,7 @@ manifest = ProgramManifest({
         GiottoProgram(
             input_middleware=[AuthenticationMiddleware, NotAuthenticatedOrRedirect('/')],
             controllers=('http-get',),
-            view=JinjaTemplateView('login.html'),
+            view=JinjaTemplateView('html/login.html'),
         ),
         GiottoProgram(
             controllers=('http-post',),
@@ -57,7 +57,7 @@ manifest = ProgramManifest({
     'register': [
         GiottoProgram(
             controllers=('http-get',),
-            view=JinjaTemplateView('register.html')
+            view=JinjaTemplateView('html/register.html')
         ),
         GiottoProgram(
             controllers=('http-post',),
