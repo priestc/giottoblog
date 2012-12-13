@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Login</h1>
+        {% if errors %}
+            <span style="color: red">{{ errors.message }}</span>
+        {% endif %}
+        <form method="post">
+            username: <input type="text" name="username">
+            <br>
+            password: <input type="password" name="password">
+            <br>
+            <input type="submit">
+        </form>
+    </body>
+</html>

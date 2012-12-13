@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Register</h1>
+        {% if errors %}
+            <span style="color: red">{{ errors.message }}</span>
+        {% endif %}
+        <form method="post">
+            <span style="color: red">{{ errors.username.message }}</span><br>
+            username: <input type="text" name="username" value="{{ errors.username.value }}">
+            <br>
+            <span style="color: red">{{ errors.password.message }}</span><br>
+            password: <input type="password" name="password">
+            password again: <input type="password" name="password2">
+            <br>
+            <input type="submit">
+        </form>
+    </body>
+</html>

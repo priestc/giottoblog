@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Create New Blog</h1>
+        <span style="color: red">{{ errors.message }}</span>
+        <form method="post">
+            <span style="color: red">{{ errors.title.message }}</span>
+            title:<input type="input" name="title" value="{{ errors.title.value }}">
+            <br>
+            <span style="color: red">{{ errors.body.message }}</span>
+            body:<textarea name="body">{{ errors.body.value }}</textarea>
+            <br>
+            <input type="submit">
+        </form>
+    </body>
+</html>
