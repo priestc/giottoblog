@@ -1,5 +1,6 @@
 from giotto.exceptions import InvalidInput, DataNotFound
 from giotto.contrib.auth.models import User
+from giotto.primitives import LOGGED_IN_USER
 
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -18,7 +19,7 @@ class Blog(config.Base):
     title = Column(String)
     body = Column(String)
 
-    def __init__(self, title, body):
+    def __init__(self, title, body, author):
         if len(body) < 100:
             d = {
                 'title': {'value': title},
@@ -26,22 +27,24 @@ class Blog(config.Base):
             }
             raise InvalidInput(data=d)
         self.body = body
+        self.author = author
         self.title = title
 
     @classmethod
-    def get(cls, id):
-        ret = config.session.query(cls).filter_by(id=id).first()
-        if not ret:
+    def get(cls, id, viewing_user=LOGGED_IN_USER):
+        blog = config.session.query(cls).filter_by(id=id).first()
+        if not blog:
             raise DataNotFound
-        return ret
+        return locals()
 
     @classmethod
-    def create(cls, title, body):
-        blog = cls(title=title, body=body)
+    def create(cls, title, body, author=LOGGED_IN_USER):
+        blog = cls(title=title, body=body, author=author)
         config.session.add(blog)
         config.session.commit()
         return blog
 
     @classmethod
-    def all(cls):
-        return config.session.query(cls).all()
+    def all(cls, viewing_user=LOGGED_IN_USER):
+        blogs = config.session.query(cls).all()
+        return locals()

@@ -12,7 +12,8 @@ engine = create_engine('sqlite+pysqlite:///file.db', module=sqlite)
 
 session = sessionmaker(bind=engine)()
 cache = DatabaseKeyValue(Base, session)
-session_store = cache
+auth_session = cache
+auth_session_expire = 3600
 
 project_path = os.path.dirname(os.path.abspath(__file__))
 

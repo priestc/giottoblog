@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html>
-    <body>
+{% extends "html/base.html" %}
+
+{% block body %}
+    <div id="center_canvas">
         <h1>Create New Blog</h1>
+        <a href="/">Home</a>
         <span style="color: red">{{ errors.message }}</span>
-        <form method="post">
-            <span style="color: red">{{ errors.title.message }}</span>
-            title:<input type="input" name="title" value="{{ errors.title.value }}">
+        <form method="post" id="new_blog_form">
+            title: <span style="color: red">{{ errors.title.message }}</span><br>
+            <input type="input" name="title" value="{{ errors.title.value }}">
             <br>
-            <span style="color: red">{{ errors.body.message }}</span>
-            body:<textarea name="body">{{ errors.body.value }}</textarea>
+            body: <span style="color: red">{{ errors.body.message }}</span><br>
+            <textarea name="body">{{ errors.body.value }}</textarea>
             <br>
             <input type="submit">
         </form>
-    </body>
-</html>
+    </div>
+{% endblock %}

@@ -1,7 +1,9 @@
-<!DOCTYPE html>
-<html>
-    <body>
+{% extends "html/base.html" %}
+
+{% block body %}
+    <div id="center_canvas">
         <h1>Login</h1>
+        <a href="/">Home</a>
         {% if errors %}
             <span style="color: red">{{ errors.message }}</span>
         {% endif %}
@@ -12,5 +14,5 @@
             <br>
             <input type="submit">
         </form>
-    </body>
-</html>
+    </div>
+{% endblock %}

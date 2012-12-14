@@ -1,6 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <body>
+{% extends "html/base.html" %}
+
+{% block body %}
+    <div id="center_canvas">
         <h1>Register</h1>
         {% if errors %}
             <span style="color: red">{{ errors.message }}</span>
@@ -10,10 +11,10 @@
             username: <input type="text" name="username" value="{{ errors.username.value }}">
             <br>
             <span style="color: red">{{ errors.password.message }}</span><br>
-            password: <input type="password" name="password">
+            password: <input type="password" name="password"><br>
             password again: <input type="password" name="password2">
             <br>
             <input type="submit">
         </form>
-    </body>
-</html>
+    </div>
+{% endblock %}
