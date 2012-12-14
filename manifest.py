@@ -19,23 +19,20 @@ manifest = ProgramManifest({
         '': AuthProgram(
             model=[Blog.all],
             view=JinjaTemplateView('html/blog_index.html'),
-            controllers=('http-get', ),
         ),
         'blog': AuthProgram(
             model=[Blog.get],
             view=JinjaTemplateView('html/blog.html'),
-            controllers=('http-get', ),
         ),
         'new': [
             AuthProgram(
                 input_middleware=[AuthenticationMiddleware, AuthenticatedOrDie],
                 view=JinjaTemplateView('html/new_blog.html'),
-                controllers=('http-get', '*'),
             ),
             AuthProgram(
+                controllers = ('http-post', 'cmd'),
                 model=[Blog.create],
                 view=Redirection("/blog", args=[M.id]),
-                controllers = ('http-post', 'cmd'),
             ),
         ]
     }),
@@ -46,7 +43,6 @@ manifest = ProgramManifest({
     'login': [
         AuthProgram(
             input_middleware=[AuthenticationMiddleware, NotAuthenticatedOrRedirect('/')],
-            controllers=('http-get',),
             view=JinjaTemplateView('html/login.html'),
         ),
         AuthProgram(
@@ -64,7 +60,6 @@ manifest = ProgramManifest({
     'register': [
         AuthProgram(
             input_middleware=[AuthenticationMiddleware, NotAuthenticatedOrRedirect('/')],
-            controllers=('http-get',),
             view=JinjaTemplateView('html/register.html')
         ),
         AuthProgram(
