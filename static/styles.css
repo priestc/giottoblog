@@ -1,0 +1,24 @@
+body {
+    background: #DDFFAA
+}
+
+#center_canvas {
+    background: white;
+    margin: 0 auto 0 auto;
+    width: 800px;
+    padding: 10px
+}
+
+.blog {
+    width: 80%;
+    background: #FFFFCC;
+}
+
+#new_blog_form textarea {
+    width: 80%;
+    height: 500px;
+}
+
+#new_blog_form input[type=text] {
+    width: 400px;
+}
