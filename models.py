@@ -20,7 +20,6 @@ class Blog(config.Base):
     body = Column(String)
 
     def __init__(self, title, body, author, id=None):
-
         self.body = body
         self.author = author
         self.title = title
@@ -39,21 +38,21 @@ class Blog(config.Base):
     def get(cls, id, viewing_user=LOGGED_IN_USER):
         blog = config.session.query(cls).filter_by(id=id).first()
         if not blog:
-            raise DataNotFound
-        return locals()
+            raise DataNotFound("Blog does not exist")
+        return {'blog': blog, 'viewing_user': viewing_user}
 
     @classmethod
     def create(cls, title, body, author=LOGGED_IN_USER):
         blog = cls(title=title, body=body, author=author)
         config.session.add(blog)
         config.session.commit()
-        return locals()
+        return blog
 
     @classmethod
     def edit(cls, id, title, body, author=LOGGED_IN_USER):
         blog = config.session.query(cls).filter_by(id=id).first()
         if not blog.author == author:
-            raise DataNotFound
+            raise DataNotFound("You can't edit other people's blog")
 
         blog.title = title
         blog.body = body

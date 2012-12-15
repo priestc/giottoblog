@@ -15,7 +15,7 @@
         <div class="blog">
             <h2><a href="/blog/{{ blog.id }}">{{ blog.title }}</a></h2>
             <h3>By {{ blog.author.username }}</h3>
-            <p>{{ blog.body }}</p>
+            <p class="blog_text">{{ blog.body }}</p>
         </div>
         {% else %}
         <em>No blogs</em>

@@ -6,7 +6,7 @@ body {
     background: white;
     margin: 0 auto 0 auto;
     width: 800px;
-    padding: 10px
+    padding: 10px;
 }
 
 .blog {
@@ -24,4 +24,9 @@ body {
 
 #new_blog_form input[type=text] {
     width: 400px;
+}
+
+.blog_text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }

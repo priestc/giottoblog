@@ -3,14 +3,20 @@
 {% block body %}
     <div id="center_canvas">
         <h1>Register</h1>
+        <a href="/">Home</a>
+        <hr>
         {% if errors %}
             <span style="color: red">{{ errors.message }}</span>
         {% endif %}
         <form method="post">
-            <span style="color: red">{{ errors.username.message }}</span><br>
-            username: <input type="text" name="username" value="{{ errors.username.value }}">
-            <br>
-            <span style="color: red">{{ errors.password.message }}</span><br>
+            {% if errors.username.message %}
+                <span style="color: red">{{ errors.username.message }}</span><br>
+            {% endif %}
+            username: <input type="text" name="username" value="{{ errors.username.value }}"><br>
+
+            {% if errors.password.message %}
+                <span style="color: red">{{ errors.password.message }}</span><br>
+            {% endif %}
             password: <input type="password" name="password"><br>
             password again: <input type="password" name="password2">
             <br>
