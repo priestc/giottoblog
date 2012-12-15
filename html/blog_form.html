@@ -2,15 +2,20 @@
 
 {% block body %}
     <div id="center_canvas">
-        <h1>Create New Blog</h1>
+        {% if data %}
+        <h1>Edit Blog</h1>
+        {% else %}
+        <h1>Create New Blog</h1>        
+        {% endif %}
+
         <a href="/">Home</a>
         <span style="color: red">{{ errors.message }}</span>
         <form method="post" id="new_blog_form">
             title: <span style="color: red">{{ errors.title.message }}</span><br>
-            <input type="input" name="title" value="{{ errors.title.value }}">
+            <input type="input" name="title" value="{{ errors.title.value or data.blog.title }}">
             <br>
             body: <span style="color: red">{{ errors.body.message }}</span><br>
-            <textarea name="body">{{ errors.body.value }}</textarea>
+            <textarea name="body">{{ errors.body.value or data.blog.body }}</textarea>
             <br>
             <input type="submit">
         </form>

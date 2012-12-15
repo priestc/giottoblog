@@ -27,13 +27,24 @@ manifest = ProgramManifest({
         'new': [
             AuthProgram(
                 input_middleware=[AuthenticationMiddleware, AuthenticatedOrDie],
-                view=JinjaTemplateView('html/new_blog.html'),
+                view=JinjaTemplateView('html/blog_form.html'),
             ),
             AuthProgram(
                 controllers = ('http-post', 'cmd'),
                 model=[Blog.create],
                 view=Redirection("/blog", args=[M.id]),
             ),
+        ],
+        'edit': [
+            AuthProgram(
+                model=[Blog.get],
+                view=JinjaTemplateView('html/blog_form.html'),
+            ),
+            AuthProgram(
+                controllers=('http-post', 'cmd'),
+                model=[Blog.edit],
+                view=Redirection('/blog', args=[M.id]),
+            )
         ]
     }),
     'multiply': GiottoProgram(

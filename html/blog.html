@@ -2,13 +2,13 @@
 
 {% block body %}
     <div id="center_canvas">
-        <h1>{{ model.blog.title }}</h1>
-        <h2>by {{ model.blog.author.username }}</h2>
+        <h1>{{ data.blog.title }}</h1>
+        <h2>by {{ data.blog.author.username }}</h2>
         <a href="/">Home</a>
-        {% if model.viewing_user == model.blog.author %}
-            <a href="/edit/{{ model.blog.id }}">Edit</a>
+        {% if data.viewing_user == data.blog.author %}
+            <a href="/edit/{{ data.blog.id }}">Edit</a>
         {% endif %}
         <hr>
-        <p>{{ model.blog.body }}</p>
+        <p>{{ data.blog.body }}</p>
     </div>
 {% endblock %}

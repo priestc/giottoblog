@@ -12,6 +12,9 @@ body {
 .blog {
     width: 80%;
     background: #FFFFCC;
+    border: 1px solid green;
+    padding: 5px;
+    margin: 5px auto 5px auto;
 }
 
 #new_blog_form textarea {
