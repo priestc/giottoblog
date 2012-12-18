@@ -26,10 +26,11 @@ manifest = ProgramManifest({
         ),
         'new': [
             AuthProgram(
-                input_middleware=[AuthenticationMiddleware, AuthenticatedOrDie],
+                input_middleware=[AuthenticatedOrDie],
                 view=JinjaTemplateView('html/blog_form.html'),
             ),
             AuthProgram(
+                input_middleware=[AuthenticatedOrDie],
                 controllers = ('http-post', 'cmd'),
                 model=[Blog.create],
                 view=Redirection("/blog", args=[M.id]),
@@ -58,7 +59,6 @@ manifest = ProgramManifest({
         ),
         AuthProgram(
             controllers=('http-post',),
-            input_middleware=[AuthenticationMiddleware],
             model=[is_authenticated("Invalid username or password")],
             view=Redirection('/'),
             output_middleware=[PresentAuthenticationCredentials],
