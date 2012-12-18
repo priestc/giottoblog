@@ -26,7 +26,7 @@ class Blog(config.Base):
         self.validate()
 
     def validate(self):
-        if len(self.body) < 100:
+        if len(self.body) < 10:
             msg = 'blog body too small, needs to be 100 chars'
             d = {
                 'title': {'value': self.title},
@@ -43,6 +43,8 @@ class Blog(config.Base):
 
     @classmethod
     def create(cls, title, body, author=LOGGED_IN_USER):
+        if not author:
+            raise InvalidInput()
         blog = cls(title=title, body=body, author=author)
         config.session.add(blog)
         config.session.commit()
@@ -66,4 +68,4 @@ class Blog(config.Base):
     @classmethod
     def all(cls, viewing_user=LOGGED_IN_USER):
         blogs = config.session.query(cls).all()
-        return locals()
+        return {'blogs': blogs, 'viewing_user': viewing_user}

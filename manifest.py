@@ -2,7 +2,7 @@ from giotto.contrib.static.programs import StaticServe, SingleStaticServe
 from giotto.programs import ProgramManifest, GiottoProgram, management_manifest
 from giotto.views import JinjaTemplateView, BasicView
 from giotto.control import Redirection, M
-from giotto.contrib.auth.middleware import (SetAuthenticationCookies, 
+from giotto.contrib.auth.middleware import (PresentAuthenticationCredentials, 
     AuthenticationMiddleware, LogoutMiddleware,
     NotAuthenticatedOrRedirect, AuthenticatedOrDie)
 from giotto.contrib.auth.models import is_authenticated, basic_register
@@ -53,7 +53,7 @@ manifest = ProgramManifest({
     ),
     'login': [
         AuthProgram(
-            input_middleware=[AuthenticationMiddleware, NotAuthenticatedOrRedirect('/')],
+            input_middleware=[NotAuthenticatedOrRedirect('/')],
             view=JinjaTemplateView('html/login.html'),
         ),
         AuthProgram(
@@ -61,7 +61,7 @@ manifest = ProgramManifest({
             input_middleware=[AuthenticationMiddleware],
             model=[is_authenticated("Invalid username or password")],
             view=Redirection('/'),
-            output_middleware=[SetAuthenticationCookies],
+            output_middleware=[PresentAuthenticationCredentials],
         ),
     ],
     'logout': AuthProgram(
@@ -70,18 +70,18 @@ manifest = ProgramManifest({
     ),
     'register': [
         AuthProgram(
-            input_middleware=[AuthenticationMiddleware, NotAuthenticatedOrRedirect('/')],
+            input_middleware=[NotAuthenticatedOrRedirect('/')],
             view=JinjaTemplateView('html/register.html')
         ),
         AuthProgram(
             controllers=('http-post',),
             model=[basic_register],
             view=Redirection('/'),
-            output_middleware=[SetAuthenticationCookies],
+            output_middleware=[PresentAuthenticationCredentials],
         ),
 
     ],
     'static': StaticServe(project_path + '/static/'),
-    'favicon': SingleStaticServe('/Users/chris/Documents/favicon.ico'),
+    'favicon': SingleStaticServe('favicon.ico'),
     'mgt': management_manifest,
 })

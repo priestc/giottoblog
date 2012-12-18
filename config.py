@@ -7,6 +7,8 @@ from giotto.utils import better_base
 
 Base = better_base()
 
+#engine = create_engine('mysql+gaerdbms:///giottoblogdb')
+
 from sqlite3 import dbapi2 as sqlite
 engine = create_engine('sqlite+pysqlite:///file.db', module=sqlite)
 
@@ -19,3 +21,5 @@ project_path = os.path.dirname(os.path.abspath(__file__))
 
 from jinja2 import Environment, FileSystemLoader
 jinja2_env = Environment(loader=FileSystemLoader(project_path))
+
+#from pdb import set_trace; set_trace()
