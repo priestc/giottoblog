@@ -35,7 +35,7 @@ manifest = ProgramManifest({
                 controllers = ('http-post', 'cmd'),
                 model=[Blog.create, make_mock_blog()],
                 view=BasicView(
-                    html=lambda m: Redirection("/blog", args=[m.id]),
+                    html=lambda m: Redirection("/blog/%s" % m.id),
                 ),
             ),
         ],
@@ -48,7 +48,7 @@ manifest = ProgramManifest({
                 controllers=['http-post', 'cmd'],
                 model=[Blog.edit],
                 view=BasicView(
-                    html=lambda m: Redirection('/blog', args=[m.id]),
+                    html=lambda m: Redirection('/blog/%s' % m.id),
                 ),
             ),
         ],
@@ -85,7 +85,7 @@ manifest = ProgramManifest({
             controllers=['http-post'],
             model=[basic_register],
             view=BasicView(
-                html=lambda m: Redirection('/', persist=m),
+                html=lambda m: Redirection('/', persist={'giotto_session': m['session_key']}),
             ),
         ),
     ],
