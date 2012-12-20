@@ -69,3 +69,19 @@ class Blog(config.Base):
     def all(cls, viewing_user=LOGGED_IN_USER):
         blogs = config.session.query(cls).all()
         return {'blogs': blogs, 'viewing_user': viewing_user}
+
+def make_mock_blog(x=1):
+    return Blog(
+        title="title %s" % x,
+        body=("body %s " % x) * 10,
+        author=User(username='mock_user', password=""),
+    )
+
+def get_blog_mock():
+    return {'blog': make_mock_blog(1)}
+
+def blog_index_mock():
+    return {
+        'blogs': [make_mock_blog(x) for x in xrange(10)],
+        'viewing_user': User(username='mock_user', password=""),
+    }

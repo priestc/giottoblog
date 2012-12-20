@@ -5,11 +5,12 @@ from giotto.control import Redirection, M
 from giotto.contrib.auth.middleware import (PresentAuthenticationCredentials, 
     AuthenticationMiddleware, LogoutMiddleware,
     NotAuthenticatedOrRedirect, AuthenticatedOrDie)
-from giotto.contrib.auth.models import is_authenticated, basic_register
+from giotto.contrib.auth.models import is_authenticated, basic_register, create_session
+from giotto.contrib.auth.views import LoginView
 
 from config import project_path
 
-from models import Blog
+from models import Blog, blog_index_mock, get_blog_mock, make_mock_blog
 
 class AuthProgram(GiottoProgram):
     pre_input_middleware = [AuthenticationMiddleware]
@@ -17,11 +18,11 @@ class AuthProgram(GiottoProgram):
 manifest = ProgramManifest({
     '': ProgramManifest({
         '': AuthProgram(
-            model=[Blog.all],
+            model=[Blog.all, blog_index_mock()],
             view=JinjaTemplateView('html/blog_index.html'),
         ),
         'blog': AuthProgram(
-            model=[Blog.get],
+            model=[Blog.get, get_blog_mock()],
             view=JinjaTemplateView('html/blog.html'),
         ),
         'new': [
@@ -32,8 +33,10 @@ manifest = ProgramManifest({
             AuthProgram(
                 input_middleware=[AuthenticatedOrDie],
                 controllers = ('http-post', 'cmd'),
-                model=[Blog.create],
-                view=Redirection("/blog", args=[M.id]),
+                model=[Blog.create, make_mock_blog()],
+                view=BasicView(
+                    html=lambda m: Redirection("/blog", args=[m.id]),
+                ),
             ),
         ],
         'edit': [
@@ -42,11 +45,13 @@ manifest = ProgramManifest({
                 view=JinjaTemplateView('html/blog_form.html'),
             ),
             AuthProgram(
-                controllers=('http-post', 'cmd'),
+                controllers=['http-post', 'cmd'],
                 model=[Blog.edit],
-                view=Redirection('/blog', args=[M.id]),
-            )
-        ]
+                view=BasicView(
+                    html=lambda m: Redirection('/blog', args=[m.id]),
+                ),
+            ),
+        ],
     }),
     'multiply': GiottoProgram(
         model=[lambda x, y: {'x': x, 'y': y, 'result': int(x) * int(y)}],
@@ -58,14 +63,17 @@ manifest = ProgramManifest({
             view=JinjaTemplateView('html/login.html'),
         ),
         AuthProgram(
-            controllers=('http-post',),
-            model=[is_authenticated("Invalid username or password")],
-            view=Redirection('/'),
-            output_middleware=[PresentAuthenticationCredentials],
+            controllers=['http-post'],
+            model=[create_session, {'username': 'mock_user', 'session_key': 'XXXXXXXXXXXXXXX'}],
+            view=BasicView(
+                html=lambda m: Redirection('/', persist={'giotto_session': m['session_key']}),
+            ),
         ),
     ],
     'logout': AuthProgram(
-        view=Redirection('/'),
+        view=BasicView(
+            html=Redirection('/'),
+        ),
         output_middleware=[LogoutMiddleware],
     ),
     'register': [
@@ -74,12 +82,12 @@ manifest = ProgramManifest({
             view=JinjaTemplateView('html/register.html')
         ),
         AuthProgram(
-            controllers=('http-post',),
+            controllers=['http-post'],
             model=[basic_register],
-            view=Redirection('/'),
-            output_middleware=[PresentAuthenticationCredentials],
+            view=BasicView(
+                html=lambda m: Redirection('/', persist=m),
+            ),
         ),
-
     ],
     'static': StaticServe(project_path + '/static/'),
     'favicon': SingleStaticServe('favicon.ico'),
