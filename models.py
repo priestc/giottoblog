@@ -27,12 +27,12 @@ class Blog(config.Base):
 
     def validate(self):
         if len(self.body) < 10:
-            msg = 'blog body too small, needs to be 100 chars'
+            msg = 'blog body too small, needs to be 10 chars'
             d = {
                 'title': {'value': self.title},
                 'body': {'value': self.body, 'message': msg}
             }
-            raise InvalidInput(msg, data=d)
+            raise InvalidInput("Blog data did not validate", **d)
 
     @classmethod
     def get(cls, id, viewing_user=LOGGED_IN_USER):
