@@ -1,12 +1,14 @@
 from giotto.contrib.static.programs import StaticServe, SingleStaticServe
-from giotto.programs import ProgramManifest, GiottoProgram, management_manifest
-from giotto.views import jinja_template, BasicView
-from giotto.control import Redirection, M
-from giotto.contrib.auth.middleware import (PresentAuthenticationCredentials, 
-    AuthenticationMiddleware, LogoutMiddleware,
-    NotAuthenticatedOrRedirect, AuthenticatedOrDie)
-from giotto.contrib.auth.models import is_authenticated, basic_register, create_session
+from giotto.programs import ProgramManifest, GiottoProgram
+from giotto.programs.management import management_manifest
+from giotto.views import jinja_template, BasicView, partial_jinja_template, lazy_jinja_template
+from giotto.control import Redirection
+from giotto.contrib.auth.middleware import (AuthenticationMiddleware, LogoutMiddleware,
+    NotAuthenticatedOrRedirect, AuthenticatedOrDie, NotAuthenticatedOrDie)
+from giotto.contrib.auth.models import basic_register, create_session
 from giotto.contrib.auth.views import LoginView
+#from giotto.contrib.messages.middleware import AppendMessages
+from giotto.middleware import RenderLazytemplate
 
 from config import project_path
 
@@ -20,13 +22,14 @@ manifest = ProgramManifest({
         '': AuthProgram(
             model=[Blog.all, blog_index_mock()],
             view=BasicView(
-                html=jinja_template('html/blog_index.html'),
+                html=lazy_jinja_template('html/blog_index.html'),
             ),
+            output_middleware=[RenderLazytemplate]
         ),
         'blog': AuthProgram(
             model=[Blog.get, get_blog_mock()],
             view=BasicView(
-                html=jinja_template('html/blog.html'),
+                html=partial_jinja_template('html/blog.html'),
             ),
         ),
         'new': [
@@ -62,8 +65,10 @@ manifest = ProgramManifest({
         ],
     }),
     'multiply': GiottoProgram(
-        model=[lambda x, y: {'x': x, 'y': y, 'result': int(x) * int(y)}],
-        view=BasicView(),
+        model=[lambda x, y: {'x': x, 'y': y, 'result': int(x) * int(y)}, {'a': [1,2,3,4,5]}],
+        view=BasicView(
+            irc=lambda m: "\x0302%(x)s\x03 * \x0302%(y)s\x03 == \x0304%(result)s\x03" % m
+        ),
     ),
     'login': [
         AuthProgram(
@@ -73,10 +78,12 @@ manifest = ProgramManifest({
             ),
         ),
         AuthProgram(
-            controllers=['http-post'],
+            input_middleware=[NotAuthenticatedOrDie],
+            controllers=['http-post', 'cmd'],
             model=[create_session, {'username': 'mock_user', 'session_key': 'XXXXXXXXXXXXXXX'}],
             view=BasicView(
-                html=lambda m: Redirection('/', persist={'giotto_session': m['session_key']}),
+                persist=lambda m: {'giotto_session': m['session_key']},
+                html=lambda m: Redirection('/'),
             ),
         ),
     ],

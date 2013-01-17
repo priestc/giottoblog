@@ -5,9 +5,10 @@ from giotto.primitives import LOGGED_IN_USER
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
-from giotto import config 
+from giotto import get_config 
+Base = get_config("Base")
 
-class Blog(config.Base):
+class Blog(Base):
     """
     Represents a user who has a blog repo
     """
@@ -36,7 +37,7 @@ class Blog(config.Base):
 
     @classmethod
     def get(cls, id, viewing_user=LOGGED_IN_USER):
-        blog = config.session.query(cls).filter_by(id=id).first()
+        blog = get_config('session').query(cls).filter_by(id=id).first()
         if not blog:
             raise DataNotFound("Blog does not exist")
         return {'blog': blog, 'viewing_user': viewing_user}
@@ -67,7 +68,7 @@ class Blog(config.Base):
 
     @classmethod
     def all(cls, viewing_user=LOGGED_IN_USER):
-        blogs = config.session.query(cls).all()
+        blogs = get_config('session').query(cls).all()
         return {'blogs': blogs, 'viewing_user': viewing_user}
 
 def make_mock_blog(x=1):
@@ -82,6 +83,6 @@ def get_blog_mock():
 
 def blog_index_mock():
     return {
-        'blogs': [make_mock_blog(x) for x in xrange(10)],
+        'blogs': [make_mock_blog(x) for x in range(10)],
         'viewing_user': User(username='mock_user', password=""),
     }
